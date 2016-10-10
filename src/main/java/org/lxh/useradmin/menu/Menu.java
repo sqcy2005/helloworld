@@ -22,7 +22,7 @@ public class Menu {
     System.out.println("5，查询全部系统");
     System.out.println("6，退出系统");
     InputData input = new InputData();
-    int ch = input.getInt("选择111", "输入正确的选择");
+    int ch = input.getInt("选择数字", "输入正确的选择");
     switch (ch) {
       default: {
         System.out.println("再来一次吧");

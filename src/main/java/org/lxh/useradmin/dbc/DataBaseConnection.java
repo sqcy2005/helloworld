@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public class DataBaseConnection {
   private static final String DBDRIVER = "com.mysql.jdbc.Driver";
-  private static final String DBURL = "jdbc:mysql://localhost:3306/mydata";
+  private static final String DBURL = "jdbc:mysql://localhost:3306/kostream";
   private static final String DBUSER = "root";
   private static final String DBPASS = "root";
   private Connection conn = null;
