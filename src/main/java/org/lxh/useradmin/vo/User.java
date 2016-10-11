@@ -10,6 +10,7 @@ public class User {
   private String name;
   private String sex;
   private Date birthday;
+  private int depart_id;
 
   public int getId() {
     return id;
@@ -43,10 +44,22 @@ public class User {
     this.birthday = birthday;
   }
 
+  public int getDepart_id() {
+    return depart_id;
+  }
+
+  public void setDepart_id(int depart_id) {
+    this.depart_id = depart_id;
+  }
+
   @Override
   public String toString() {
     return "User{" +
-      "id=" + id + ", name='" + name  + ", sex='" + sex + ", birthday=" + birthday + '}';
+      "id=" + id +
+      ", name='" + name + '\'' +
+      ", sex='" + sex + '\'' +
+      ", birthday=" + birthday +
+      ", depart_id=" + depart_id +
+      '}';
   }
-
 }

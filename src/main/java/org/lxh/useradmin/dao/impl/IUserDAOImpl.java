@@ -23,12 +23,13 @@ public class IUserDAOImpl implements IUserDAO {
   public boolean doCreate(User user) throws Exception {
     boolean flag = false;
     PreparedStatement pstmt = null;
-    String sql = "INSERT INTO user(name ,sex ,birthday) VALUES (?,?,?)";
+    String sql = "INSERT INTO user(name ,sex ,birthday,depart_id) VALUES (?,?,?,?)";
     try {
       pstmt = this.conn.prepareStatement(sql);
       pstmt.setString(1, user.getName());
       pstmt.setString(2, user.getSex());
       pstmt.setDate(3, new java.sql.Date(user.getBirthday().getTime()));
+      pstmt.setInt(4,user.getDepart_id());
       if (pstmt.executeUpdate() > 0) {
         flag = true;
       }
@@ -77,6 +78,7 @@ public class IUserDAOImpl implements IUserDAO {
         user.setName(rs.getString(2));
         user.setSex(rs.getString(3));
         user.setBirthday(rs.getDate(4));
+        user.setDepart_id(rs.getInt(5));
       }
       rs.close();
     } catch (Exception e) {
@@ -92,13 +94,14 @@ public class IUserDAOImpl implements IUserDAO {
   public boolean doUpdate(User user) throws Exception {
     PreparedStatement pstmt = null;
     boolean flag = false;
-    String sql = "UPDATE user SET name=? ,sex=? ,birthday=? where id =?";
+    String sql = "UPDATE user SET name=? ,sex=? ,birthday=? depart_id=? where id =?";
     try {
       pstmt = this.conn.prepareStatement(sql);
       pstmt.setString(1, user.getName());
       pstmt.setString(2, user.getSex());
       pstmt.setDate(3, new java.sql.Date(user.getBirthday().getTime()));
-      pstmt.setInt(4, user.getId());
+      pstmt.setInt(4,user.getDepart_id());
+      pstmt.setInt(5, user.getId());
       if (pstmt.executeUpdate() > 0) {
         flag = true;
       }
@@ -128,6 +131,7 @@ public class IUserDAOImpl implements IUserDAO {
         user.setName(rs.getString(2));
         user.setSex(rs.getString(3));
         user.setBirthday(rs.getDate(4));
+        user.setDepart_id(rs.getInt(5));
         all.add(user);
       }
       rs.close();
