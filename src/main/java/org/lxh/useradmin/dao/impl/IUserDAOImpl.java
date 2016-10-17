@@ -94,7 +94,7 @@ public class IUserDAOImpl implements IUserDAO {
   public boolean doUpdate(User user) throws Exception {
     PreparedStatement pstmt = null;
     boolean flag = false;
-    String sql = "UPDATE user SET name=? ,sex=? ,birthday=? depart_id=? where id =?";
+    String sql = "UPDATE user SET name=? ,sex=? ,birthday=? ,depart_id=? where id =?";
     try {
       pstmt = this.conn.prepareStatement(sql);
       pstmt.setString(1, user.getName());
