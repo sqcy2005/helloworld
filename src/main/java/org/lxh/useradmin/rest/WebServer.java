@@ -2,15 +2,15 @@ package org.lxh.useradmin.rest;
 
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.lxh.useradmin.dao.DepartmentDAO;
 import org.lxh.useradmin.factory.DAOFactory;
 import org.lxh.useradmin.factory.DAOFactoryDepartment;
 import org.lxh.useradmin.vo.Department;
 import org.lxh.useradmin.vo.User;
 
+import javax.inject.Inject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,16 +21,19 @@ import java.util.Date;
  */
 public class WebServer {
 
-  public static void main(String[] args) {
+  private Router router;
+  private DepartmentDAO departmentDAO;
 
-//    Vertx vertx = Vertx.vertx();
-//    HttpServer server = vertx.createHttpServer();
-//    Router router = Router.router(vertx);
+  @Inject
+  public WebServer(Router router, DepartmentDAO departmentDAO) {
+    this.router = router;
+    this.departmentDAO = departmentDAO;
+  }
 
-    Vertx vertx = Vertx.vertx();
-    HttpServer server = vertx.createHttpServer();
-    Router router = Router.router(vertx);
-
+  /**
+   * 启动Web服务
+   */
+  public void start() {
     router.get("/user/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
@@ -58,7 +61,9 @@ public class WebServer {
     router.get("/department/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
-        Department department = DAOFactoryDepartment.getDepartInstance().findById(id);
+
+        Department department = departmentDAO.findById(id);
+
         routingContext.response().end(department.getName());
       } catch (Exception e) {
         e.printStackTrace();
@@ -174,9 +179,6 @@ public class WebServer {
         e.printStackTrace();
       }
     });
-    server.requestHandler(router::accept);
-    server.listen(8080);
-
   }
 }
 
