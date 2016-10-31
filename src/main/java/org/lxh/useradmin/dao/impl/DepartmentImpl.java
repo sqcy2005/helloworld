@@ -1,5 +1,7 @@
 package org.lxh.useradmin.dao.impl;
 
+import com.google.inject.Inject;
+import org.jooq.DSLContext;
 import org.lxh.useradmin.dao.DepartmentDAO;
 import org.lxh.useradmin.vo.Department;
 
@@ -14,8 +16,11 @@ import java.sql.SQLException;
 public class DepartmentImpl implements DepartmentDAO {
   private Connection conn = null;
 
-  public DepartmentImpl(Connection conn) {
-    this.conn = conn;
+  private DSLContext jooq;
+
+  @Inject
+  public DepartmentImpl(DSLContext jooq) {
+    this.jooq = jooq;
   }
 
   public boolean doCreate(Department department) throws SQLException {

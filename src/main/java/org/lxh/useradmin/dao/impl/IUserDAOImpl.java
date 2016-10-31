@@ -1,5 +1,6 @@
 package org.lxh.useradmin.dao.impl;
 
+import com.google.inject.Inject;
 import org.jooq.DSLContext;
 import org.jooq.RecordMapper;
 import org.lxh.useradmin.dao.IUserDAO;
@@ -16,7 +17,12 @@ import static org.lxh.useradmin.entity.tables.User.USER;
  */
 public class IUserDAOImpl implements IUserDAO {
 
-  private DSLContext jooq = null;
+  private DSLContext jooq;
+
+  @Inject
+  public IUserDAOImpl(DSLContext jooq) {
+    this.jooq = jooq;
+  }
 
   //将userRecord结果转换成vo
   private RecordMapper<UserRecord, User> userRecordMapper = userRecord -> {
@@ -31,11 +37,6 @@ public class IUserDAOImpl implements IUserDAO {
     }
     return user;
   };
-
-
-  public IUserDAOImpl(DSLContext jooq) {
-    this.jooq = jooq;
-  }
 
   public boolean doCreate(User user) throws Exception {
     int effectRow = jooq.insertInto(USER)

@@ -2,14 +2,16 @@ package org.lxh.useradmin.rest;
 
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
+import org.lxh.useradmin.dao.DepartmentDAO;
+
+import org.lxh.useradmin.dao.IUserDAO;
 import org.lxh.useradmin.vo.Department;
 import org.lxh.useradmin.vo.User;
 
+import javax.inject.Inject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,20 +22,25 @@ import java.util.Date;
  */
 public class WebServer {
 
-  public static void main(String[] args) {
+  private Router router;
+  private IUserDAO userDAO;
+  private DepartmentDAO departmentDAO;
 
-//    Vertx vertx = Vertx.vertx();
-//    HttpServer server = vertx.createHttpServer();
-//    Router router = Router.router(vertx);
+  @Inject
+  public WebServer(Router router, IUserDAO userDAO, DepartmentDAO departmentDAO) {
+    this.router = router;
+    this.departmentDAO = departmentDAO;
+    this.userDAO = userDAO;
+  }
 
-    Vertx vertx = Vertx.vertx();
-    HttpServer server = vertx.createHttpServer();
-    Router router = Router.router(vertx);
-
+  /**
+   * 启动Web服务
+   */
+  public void start() {
     router.get("/user/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
-        User user = DAOFactory.getIUserInstance().findById(id);
+        User user = userDAO.findById(id);
         routingContext.response().end(user.getName());
       } catch (Exception e) {
         e.printStackTrace();
@@ -45,7 +52,7 @@ public class WebServer {
       public void handle(RoutingContext event) {
         int id = Integer.valueOf(event.pathParam("id"));
         try {
-          User user = DAOFactory.getIUserInstance().findById(id);
+          User user = userDAO.findById(id);
           event.response().end(user.getName() + "  " + user.getSex());
         } catch (Exception e) {
           e.printStackTrace();
@@ -57,7 +64,9 @@ public class WebServer {
     router.get("/department/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
-        Department department = DAOFactoryDepartment.getDepartInstance().findById(id);
+
+        Department department = departmentDAO.findById(id);
+
         routingContext.response().end(department.getName());
       } catch (Exception e) {
         e.printStackTrace();
@@ -66,7 +75,7 @@ public class WebServer {
     router.delete("/user/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
-        DAOFactory.getIUserInstance().doDelete(id);
+        userDAO.doDelete(id);
         routingContext.response().end("删除成功");
       } catch (Exception e) {
         e.printStackTrace();
@@ -80,7 +89,7 @@ public class WebServer {
         Department department = new Department();
         department.setName(map.get("name"));
         try {
-          DAOFactoryDepartment.getDepartInstance().doCreate(department);
+          //DAOFactoryDepartment.getDepartInstance().doCreate(department);
           routerContext.response().end("新建部门成功");
         } catch (Exception e) {
           e.printStackTrace();
@@ -96,7 +105,7 @@ public class WebServer {
         department.setName(map.get("name"));
         department.setId(Integer.valueOf(map.get("id")));
         try {
-          DAOFactoryDepartment.getDepartInstance().doUpdate(department);
+          //DAOFactoryDepartment.getDepartInstance().doUpdate(department);
           routerContext.response().end("update succeed");
         } catch (Exception e) {
           e.printStackTrace();
@@ -125,7 +134,7 @@ public class WebServer {
         }
         user.setBirthday(date);
         try {
-          DAOFactory.getIUserInstance().doUpdate(user);
+          userDAO.doUpdate(user);
           routerContext.response().end("okkkkk");
         } catch (Exception e) {
           e.printStackTrace();
@@ -155,7 +164,7 @@ public class WebServer {
         user.setBirthday(date);
         user.setDepart_id(Integer.valueOf(map.get("depart_id")));
         try {
-          DAOFactory.getIUserInstance().doCreate(user);
+          userDAO.doCreate(user);
           routerContext.response().end("create succeed");
         } catch (Exception e) {
           e.printStackTrace();
@@ -167,15 +176,12 @@ public class WebServer {
     router.delete("/department/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
-        DAOFactoryDepartment.getDepartInstance().doDelete(id);
+        //DAOFactoryDepartment.getDepartInstance().doDelete(id);
         routingContext.response().end("删除成功");
       } catch (Exception e) {
         e.printStackTrace();
       }
     });
-    server.requestHandler(router::accept);
-    server.listen(8080);
-
   }
 }
 
