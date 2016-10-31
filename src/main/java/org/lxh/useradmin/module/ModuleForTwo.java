@@ -17,7 +17,11 @@ import org.lxh.useradmin.rest.WebServer;
 public class ModuleForTwo implements Module {
   public void configure(Binder binder){
     binder.bind(DepartmentDAO.class).to(DepartmentDAOProxy.class).in(Scopes.SINGLETON);
+
+
     binder.bind(WebServer.class);
+
+
   }
 
   @Provides
