@@ -1,4 +1,4 @@
-package org.lxh.useradmin.vo;
+package org.lxh.useradmin.bo;
 
 import java.util.Date;
 

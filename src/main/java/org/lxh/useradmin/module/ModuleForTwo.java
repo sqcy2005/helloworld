@@ -14,6 +14,8 @@ import org.lxh.useradmin.dao.impl.DepartmentImpl;
 import org.lxh.useradmin.dao.impl.IUserDAOImpl;
 import org.lxh.useradmin.dbc.DataBaseConnection;
 import org.lxh.useradmin.rest.WebServer;
+import org.lxh.useradmin.service.SomeService;
+import org.lxh.useradmin.service.impl.SomeServiceImpl;
 
 /**
  * Created by songqian on 16/10/18.
@@ -22,6 +24,7 @@ public class ModuleForTwo implements Module {
   public void configure(Binder binder){
     binder.bind(IUserDAO.class).to(IUserDAOImpl.class).in(Scopes.SINGLETON);
     binder.bind(DepartmentDAO.class).to(DepartmentImpl.class).in(Scopes.SINGLETON);
+    binder.bind(SomeService.class).to(SomeServiceImpl.class).in(Scopes.SINGLETON);
     binder.bind(WebServer.class);
   }
 

@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * Created by songqian on 16/9/24.
  */
 public class DataBaseConnection {
-  private static final String DBURL = "jdbc:mysql://localhost:3306/kostream";
+  private static final String DBURL = "jdbc:mysql://localhost:3306/kostream?useUnicode=true&characterEncoding=utf-8&useSSL=false";
   private static final String DBUSER = "root";
   private static final String DBPASS = "root";
 

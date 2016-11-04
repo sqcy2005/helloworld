@@ -1,13 +1,14 @@
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
-import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.lxh.useradmin.bo.Department;
+import org.lxh.useradmin.bo.User;
+import org.lxh.useradmin.dao.IUserDAO;
 import org.lxh.useradmin.module.ModuleForTwo;
-import org.lxh.useradmin.rest.WebServer;
+import org.lxh.useradmin.service.SomeService;
+
+import java.util.Date;
 
 /**
  * Created by songqian on 16/9/23.
@@ -20,35 +21,27 @@ public class UserWebTest {
   @BeforeClass
   public static void beforeClass() {
     injector = Guice.createInjector(new ModuleForTwo());
-    WebServer webServer = injector.getInstance(WebServer.class);
-    webServer.start();
+
   }
 
   @Test
-  public void user() {
-    Vertx vertx = Vertx.vertx();
+  public void someService() {
+    SomeService someService = injector.getInstance(SomeService.class);
+    IUserDAO userDAO = injector.getInstance(IUserDAO.class);
+    User user = new User();
+    user.setName("aabb");
+    user.setSex("male");
+    user.setDepart_id(1);
+    user.setBirthday(new Date(System.currentTimeMillis()));
 
-    JsonObject userJson = new JsonObject();
-    userJson.put("name", "xxaxx");
-    userJson.put("sex", "male");
-    userJson.put("birthDay", "1984-11-26");
-
-    vertx.createHttpClient()
-      .post(8080, "localhost", "/user", response -> {
-        response.bodyHandler(bodyBuffer -> {
-          Assert.assertEquals(bodyBuffer.toString(), "create succeed");
-        });
-      })
-      .putHeader("Content-Type", "application/json")
-      .end(userJson.encode());
+    Department department = new Department();
+    department.setId(19);
+    someService.addUserAndDepartment(user, department);
 
 
   }
 
-  @AfterClass
-  public static void afterClass() {
 
-  }
 
 
 }

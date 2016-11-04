@@ -1,17 +1,18 @@
 package org.lxh.useradmin.dao;
 
-import org.lxh.useradmin.vo.User;
+import org.jooq.Configuration;
+import org.lxh.useradmin.bo.User;
 
 import java.util.*;
 
 
 public interface IUserDAO {
 
-  boolean doCreate(User user) throws Exception;
+  boolean doCreate(User user, Configuration configuration) throws Exception;
 
-  boolean doUpdate(User user) throws Exception;
+  boolean doUpdate(User user, Configuration configuration) throws Exception;
 
-  boolean doDelete(int id) throws Exception;
+  boolean doDelete(int id, Configuration configuration) throws Exception;
 
   User findById(int id) throws Exception;
 

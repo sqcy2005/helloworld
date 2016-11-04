@@ -1,17 +1,19 @@
 package org.lxh.useradmin.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-
+import org.lxh.useradmin.bo.Department;
+import org.lxh.useradmin.bo.User;
 import org.lxh.useradmin.dao.DepartmentDAO;
-
 import org.lxh.useradmin.dao.IUserDAO;
-import org.lxh.useradmin.vo.Department;
-import org.lxh.useradmin.vo.User;
+import org.lxh.useradmin.service.SomeService;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,17 +27,16 @@ public class WebServer {
   private Router router;
   private IUserDAO userDAO;
   private DepartmentDAO departmentDAO;
+  private SomeService someService;
 
   @Inject
-  public WebServer(Router router, IUserDAO userDAO, DepartmentDAO departmentDAO) {
+  public WebServer(Router router, SomeService someService, IUserDAO userDAO, DepartmentDAO departmentDAO) {
     this.router = router;
+    this.someService = someService;
     this.departmentDAO = departmentDAO;
     this.userDAO = userDAO;
   }
 
-  /**
-   * 启动Web服务
-   */
   public void start() {
     router.get("/user/:id").handler(routingContext -> {
       try {
@@ -75,11 +76,34 @@ public class WebServer {
     router.delete("/user/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
-        userDAO.doDelete(id);
+        //userDAO.doDelete(id);
         routingContext.response().end("删除成功");
       } catch (Exception e) {
         e.printStackTrace();
       }
+    });
+
+    router.post("/postuser").consumes("application/json").handler(routerContext -> {
+      routerContext.request().bodyHandler(buffer -> {
+        JsonObject jsonObject = buffer.toJsonObject();
+        System.out.println(jsonObject.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+          User user1 = mapper.readValue(jsonObject.toString(), User.class);
+          someService.addUser(user1);
+
+
+
+
+
+
+
+          
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        routerContext.response().end();
+      });
     });
 
     router.post("/department").handler(routerContext -> {
@@ -134,7 +158,7 @@ public class WebServer {
         }
         user.setBirthday(date);
         try {
-          userDAO.doUpdate(user);
+          //userDAO.doUpdate(user);
           routerContext.response().end("okkkkk");
         } catch (Exception e) {
           e.printStackTrace();
@@ -164,7 +188,7 @@ public class WebServer {
         user.setBirthday(date);
         user.setDepart_id(Integer.valueOf(map.get("depart_id")));
         try {
-          userDAO.doCreate(user);
+          userDAO.doCreate(user, null);
           routerContext.response().end("create succeed");
         } catch (Exception e) {
           e.printStackTrace();

@@ -1,4 +1,4 @@
-package org.lxh.useradmin.vo;
+package org.lxh.useradmin.bo;
 
 /**
  * Created by songqian on 16/10/10.
