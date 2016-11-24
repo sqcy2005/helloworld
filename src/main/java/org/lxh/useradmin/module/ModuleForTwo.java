@@ -21,20 +21,39 @@ import org.lxh.useradmin.service.impl.SomeServiceImpl;
  * Created by songqian on 16/10/18.
  */
 public class ModuleForTwo implements Module {
-  public void configure(Binder binder){
+  public void configure(Binder binder) {
     binder.bind(IUserDAO.class).to(IUserDAOImpl.class).in(Scopes.SINGLETON);
     binder.bind(DepartmentDAO.class).to(DepartmentImpl.class).in(Scopes.SINGLETON);
     binder.bind(SomeService.class).to(SomeServiceImpl.class).in(Scopes.SINGLETON);
     binder.bind(WebServer.class);
   }
 
+//  @Provides
+//  DSLContext jooq() {
+//    return DataBaseConnection.getJooq();
+//  }
+//
+
+
   @Provides
-  DSLContext jooq() {
+  public DSLContext jooq() {
+
     return DataBaseConnection.getJooq();
   }
 
+//  @Provides
+//  Router webRouter() {
+//    Vertx vertx = Vertx.vertx();
+//    HttpServer server = vertx.createHttpServer();
+//    Router router = Router.router(vertx);
+//    server.requestHandler(router::accept);
+//    server.listen(8080);
+//    return router;
+//  }
+
+
   @Provides
-  Router webRouter() {
+  public Router webRouter() {
     Vertx vertx = Vertx.vertx();
     HttpServer server = vertx.createHttpServer();
     Router router = Router.router(vertx);
@@ -42,4 +61,6 @@ public class ModuleForTwo implements Module {
     server.listen(8080);
     return router;
   }
+
+
 }

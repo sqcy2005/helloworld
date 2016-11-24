@@ -1,11 +1,9 @@
 package org.lxh.useradmin.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import org.lxh.useradmin.bo.Department;
 import org.lxh.useradmin.bo.User;
 import org.lxh.useradmin.dao.DepartmentDAO;
@@ -48,18 +46,18 @@ public class WebServer {
       }
     });
 
-    router.get("/friend/:id").handler(new Handler<RoutingContext>() {
-      @Override
-      public void handle(RoutingContext event) {
-        int id = Integer.valueOf(event.pathParam("id"));
-        try {
-          User user = userDAO.findById(id);
-          event.response().end(user.getName() + "  " + user.getSex());
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
+//    router.get("/friend/:id").handler(new Handler<RoutingContext>() {
+//      @Override
+//      public void handle(RoutingContext event) {
+//        int id = Integer.valueOf(event.pathParam("id"));
+//        try {
+//          User user = userDAO.findById(id);
+//          event.response().end(user.getName() + "  " + user.getSex());
+//        } catch (Exception e) {
+//          e.printStackTrace();
+//        }
+//      }
+//    });
 
 
     router.get("/department/:id").handler(routingContext -> {
@@ -73,6 +71,8 @@ public class WebServer {
         e.printStackTrace();
       }
     });
+
+
     router.delete("/user/:id").handler(routingContext -> {
       try {
         int id = Integer.valueOf(routingContext.pathParam("id"));
@@ -91,19 +91,27 @@ public class WebServer {
         try {
           User user1 = mapper.readValue(jsonObject.toString(), User.class);
           someService.addUser(user1);
-
-
-
-
-
-
-
-          
         } catch (IOException e) {
           e.printStackTrace();
         }
         routerContext.response().end();
       });
+    });
+
+    router.post("/postdepartment").consumes("application/json").handler(routerContext -> {
+      routerContext.request().bodyHandler(buffer -> {
+        JsonObject jsonObject = buffer.toJsonObject();
+        System.out.println(jsonObject.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+          Department department = mapper.readValue(jsonObject.toString(), Department.class);
+          someService.addDepartment(department);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        routerContext.response().end();
+      });
+
     });
 
     router.post("/department").handler(routerContext -> {
@@ -121,6 +129,8 @@ public class WebServer {
         }
       });
     });
+
+
     router.put("/department").handler(routerContext -> {
       routerContext.request().setExpectMultipart(true);
       routerContext.request().bodyHandler(buffer -> {
@@ -167,6 +177,20 @@ public class WebServer {
       });
     });
 
+    router.put("/updateuser").consumes("application/json").handler(routerContext -> {
+      routerContext.request().bodyHandler(buffer -> {
+        JsonObject jsonObject = buffer.toJsonObject();
+        System.out.println(jsonObject.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+          User user = mapper.readValue(jsonObject.toString(), User.class);
+          someService.updateUser(user);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      });
+    });
+
 
     router.post("/user").handler(routerContext -> {
       routerContext.request().setExpectMultipart(true);
@@ -206,6 +230,8 @@ public class WebServer {
         e.printStackTrace();
       }
     });
+
+
   }
 }
 

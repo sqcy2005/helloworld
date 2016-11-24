@@ -17,6 +17,13 @@ import org.lxh.useradmin.bo.User;
 public interface SomeService {
 
   boolean addUserAndDepartment(User user, Department department);
+
   boolean addUser(User user);
+
+  boolean addDepartment(Department department);
+
+
+  boolean updateUser(User user);
+
 
 }

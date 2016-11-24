@@ -55,6 +55,9 @@ public class IUserDAOImpl implements IUserDAO {
     this.jooq = jooq;
   }
 
+
+
+
   private RecordMapper<UserRecord, User> userRecordMapper = userRecord -> {
     User user = null;
     if (userRecord != null) {
@@ -164,12 +167,6 @@ public class IUserDAOImpl implements IUserDAO {
       .fetch(userRecordMapper);
     return users;
   }
-
-
-
-
-
-
 
 
 }
